@@ -1,63 +1,6 @@
+local config = require("tip.config")
+
 local M = {}
-
----@class tip.Layout
----@field width? number: Relative width of the floating window
----@field height? number: Relative height of the floating window
----@field border? string: Border style of the floating window
-
----@class tip.State
----@field tips? string: Markdown where each `#` is a tip
----@field layout? tip.Layout: The layout of the floating window
----@field _setup_done? boolean: Whether the setup function has been called
-
----@type tip.State
-local state = {
-  tips = "",
-  layout = {
-    width = 0.8,
-    height = 0.8,
-    border = "rounded",
-  },
-  _setup_done = false,
-}
-
--- Get the directory of this script
-local function get_script_dir()
-  local info = debug.getinfo(1, "S")
-  local script_path = info.source:sub(2)
-  return vim.fn.fnamemodify(script_path, ":h")
-end
-
-local function read_file(path)
-  local file, err = io.open(path, "r")
-  if not file then
-    return nil, err
-  end
-  local content = file:read("*a")
-  file:close()
-  return content
-end
-
----@class tip.Config
----@field tips? string: Markdown where each `#` is a tip
----@field layout? tip.Layout: The layout of the floating window
-
----@param opts? tip.Config: Options for the tip module
-M.setup = function(opts)
-  opts = opts or {}
-
-  if opts.tips == nil then
-    local script_dir = get_script_dir()
-    local default_tips, err = read_file(script_dir .. "/default.md")
-    if not default_tips then
-      default_tips = "Error: Could not read default tips. " .. err
-    end
-    opts.tips = default_tips
-  end
-  state.tips = opts.tips
-  state.layout = vim.tbl_extend("force", state.layout, opts.layout or {})
-  state._setup_done = true
-end
 
 ---@class tip.Winbuf
 ---@field buf number: The buffer number
@@ -84,13 +27,13 @@ end
 local function create_winbufs()
   local width = vim.o.columns
   local height = vim.o.lines
-  local win_width = math.floor(width * state.layout.width)
-  local win_height = math.floor(height * state.layout.height)
+  local win_width = math.floor(width * config.options.layout.width)
+  local win_height = math.floor(height * config.options.layout.height)
   local row = math.floor((height - win_height) / 2)
   local col = math.floor((width - win_width) / 2)
 
   local border_correction = 1
-  if state.layout.border == "none" then
+  if config.options.layout.border == "none" then
     border_correction = 0
   end
 
@@ -99,7 +42,7 @@ local function create_winbufs()
     width = win_width,
     height = 1,
     style = "minimal",
-    border = state.layout.border,
+    border = config.options.layout.border,
     row = row + border_correction,
     col = col,
   }
@@ -110,7 +53,7 @@ local function create_winbufs()
     width = win_width,
     height = win_height - 2 - 6 * border_correction,
     style = "minimal",
-    border = state.layout.border,
+    border = config.options.layout.border,
     row = row + 1 + 3 * border_correction,
     col = col,
   }
@@ -121,7 +64,7 @@ local function create_winbufs()
     width = win_width,
     height = 1,
     style = "minimal",
-    border = state.layout.border,
+    border = config.options.layout.border,
     row = row + win_height - 1 - border_correction,
     col = col,
   }
@@ -230,19 +173,43 @@ local function add_autocmds(windows)
   })
 end
 
+-- Get the directory of this script
+local function get_script_dir()
+  local info = debug.getinfo(1, "S")
+  local script_path = info.source:sub(2)
+  return vim.fn.fnamemodify(script_path, ":h")
+end
+
+local function read_file(path)
+  local file, err = io.open(path, "r")
+  if not file then
+    return nil, err
+  end
+  local content = file:read("*a")
+  file:close()
+  return content
+end
+
 M.show_tip = function()
-  if not state._setup_done then
-    error("Tip: setup() must be called before show_tip().")
+  local options = config.options
+
+  if options.tips == "" then
+    local script_dir = get_script_dir()
+    local default_tips, err = read_file(script_dir .. "/default.md")
+    if not default_tips then
+      default_tips = "Error: Could not read default tips" .. err
+    end
+    options.tips = default_tips
   end
 
   local windows = create_winbufs()
-  add_autocmds(windows)
 
-  set_body_content(windows.body, state.tips)
+  add_autocmds(windows)
+  add_keymaps(windows.body)
+
+  set_body_content(windows.body, config.options.tips)
   set_title_content(windows.title)
   set_footer_content(windows.footer)
-
-  add_keymaps(windows.body)
 end
 
 return M
