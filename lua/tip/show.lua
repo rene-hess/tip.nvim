@@ -6,7 +6,7 @@ local M = {}
 ---@field buf number: The buffer number
 ---@field win number: The window number
 
----@param cfg table: Configuration for the floating window
+---@param cfg vim.api.keyset.win_config Map defining the window configuration
 ---@param enter boolean: Whether to enter the window
 ---@return tip.Winbuf: The buffer and window number
 local function create_floating_winbuf(cfg, enter)
@@ -161,6 +161,8 @@ local function foreach_window(windows, callback)
   end
 end
 
+---Add an autocmd to close the floating windows when the buffer is closed
+---@param windows tip.Winbufs: A table of window buffers
 local function add_autocmds(windows)
   vim.api.nvim_create_autocmd("BufLeave", {
     buffer = windows.body.buf,
