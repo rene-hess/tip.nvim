@@ -1,10 +1,8 @@
 tip-nvim	tip.txt	/*tip-nvim*
 tip.nvim	tip.txt	/*tip.nvim*
 tip.nvim-api	tip.txt	/*tip.nvim-api*
-tip.nvim-author	tip.txt	/*tip.nvim-author*
 tip.nvim-example	tip.txt	/*tip.nvim-example*
 tip.nvim-intro	tip.txt	/*tip.nvim-intro*
-tip.nvim-license	tip.txt	/*tip.nvim-license*
 tip.nvim-setup	tip.txt	/*tip.nvim-setup*
 tip.nvim.txt	tip.txt	/*tip.nvim.txt*
 tip.setup()	tip.txt	/*tip.setup()*
