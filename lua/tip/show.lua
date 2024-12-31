@@ -214,4 +214,7 @@ M.show_tip = function()
   set_footer_content(windows.footer)
 end
 
+-- Only exprted for testing
+M._parse = parse
+
 return M
