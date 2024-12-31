@@ -1,20 +1,32 @@
 # tips.nvim
 
-Yeah! One of the most annoying features brought to Neovim. Tips! If you want they show up on
-startup. And since it is your config they are of course easy to turn off 🤣.
+🎉 **Bring tips to your Neovim setup!**
 
-- You need to provide a Markdown string. Each section `#` is a tip.
-- The plugin provides a function to show a random tip.
-- You can configure when to show tips. See the example below.
+Want to learn new tricks or improve your workflow? `tips.nvim` lets you display helpful tips in a
+floating window—perfect for startup motivation or practice reminders. And don’t worry, turning it
+off is as easy as a quick config tweak! 🤣
 
+## Features
+
+- Provide tips as a Markdown string. Each `#` starts a new tip.
+- Show a random tip with a single function call.
+- Fully configurable! Decide when and how tips appear—see the example below.
+
+## Motivation
+
+**The best way to use this plugin is to not need it.**
+
+I created `tips.nvim` to help me remember movement patterns I tend to forget or underuse. My tips
+file is intentionally small—just a few key reminders. Once a tip becomes second nature, I remove it
+from the file.
 
 ## Installation
 
-For lazy.nvim use:
+For `lazy.nvim`, add the following configuration:
 
 ```lua
   {
-    dir = '~/sync/programming/nvim/tip.nvim',
+    dir = '~/path/to/tip.nvim',
     config = function()
       -- Read tips from a markdown file next to this file. Each section is a tip.
       local script_dir = vim.fn.fnamemodify(debug.getinfo(1, 'S').source:sub(2), ':h')
@@ -56,4 +68,4 @@ local default_options = {
 }
 ```
 The tips should be provided as a Markdown string. You can, e.g., read the tips from a markdown
-file. See installation above.
+file. See the installation example above.
