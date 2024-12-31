@@ -26,7 +26,7 @@ For `lazy.nvim`, add the following configuration:
 
 ```lua
   {
-    dir = '~/path/to/tip.nvim',
+    'rene-hess/tip.nvim',
     config = function()
       -- Read tips from a markdown file next to this file. Each section is a tip.
       local script_dir = vim.fn.fnamemodify(debug.getinfo(1, 'S').source:sub(2), ':h')

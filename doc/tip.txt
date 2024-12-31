@@ -67,7 +67,7 @@ configuration in your `lazy.nvim` setup to integrate `tip.nvim`:
 
 >lua
     {
-      dir = '~/sync/programming/nvim/tip.nvim',
+      'rene-hess/tip.nvim',
       config = function()
         -- Read tips from a markdown file next to this file
         local script_dir = vim.fn.fnamemodify(debug.getinfo(1, 'S').source:sub(2), ':h')
