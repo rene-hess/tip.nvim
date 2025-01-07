@@ -192,6 +192,15 @@ local function read_file(path)
   return content
 end
 
+local function set_buffer_options(buf)
+  vim.bo[buf].buftype = "nofile"
+  vim.bo[buf].swapfile = false
+  vim.bo[buf].buflisted = false
+  vim.bo[buf].bufhidden = "wipe"
+  vim.bo[buf].modifiable = false
+  vim.bo[buf].readonly = true
+end
+
 M.show_tip = function()
   local options = config.options
 
@@ -212,6 +221,10 @@ M.show_tip = function()
   set_body_content(windows.body, config.options.tips)
   set_title_content(windows.title)
   set_footer_content(windows.footer)
+
+  for _, buf in pairs({ windows.title.buf, windows.body.buf, windows.footer.buf }) do
+    set_buffer_options(buf)
+  end
 end
 
 -- Only exprted for testing
