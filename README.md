@@ -3,14 +3,16 @@
 🎉 **Bring tips to your Neovim setup!**
 
 Want to learn new tricks or improve your workflow? `tips.nvim` lets you display helpful tips in a
-floating window—perfect for startup motivation or practice reminders. And don’t worry, turning it
-off is as easy as a quick config tweak! 🤣
+floating window — perfect for startup motivation or practice reminders. And don’t worry, this also
+includes the most important feature of startup tips: You can turn them off. Simply adjust your
+config to not load them 🤣
 
 ## Features
 
 - Provide tips as a Markdown string. Each `#` starts a new tip.
 - Show a random tip with a single function call.
-- Fully configurable! Decide when and how tips appear—see the example below.
+- Fully configurable! Decide when and how tips appear — see the example below.
+- Note: This plugin does not include any tips. You should write your own.
 
 ## Motivation
 
