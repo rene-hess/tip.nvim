@@ -1,4 +1,5 @@
 local config = require("tip.config")
+local path = require("plenary.path")
 
 local M = {}
 
@@ -201,6 +202,15 @@ local function set_buffer_options(buf)
   vim.bo[buf].readonly = true
 end
 
+local function save_last_shown_time()
+  local data_path = path:new(vim.fn.stdpath("data"), "tip-nvim")
+  data_path:mkdir({ parents = true })
+
+  local time_file = data_path:joinpath("last_shown.txt")
+  local current_time = tostring(os.time())
+  time_file:write(current_time, "w")
+end
+
 M.show_tip = function()
   local options = config.options
 
@@ -225,6 +235,16 @@ M.show_tip = function()
   for _, buf in pairs({ windows.title.buf, windows.body.buf, windows.footer.buf }) do
     set_buffer_options(buf)
   end
+
+  save_last_shown_time()
+end
+
+---@return number|nil timestamp: Unix timestamp of when the last tip was shown, or nil if never shown
+M.last_shown = function()
+  local data_path = path:new(vim.fn.stdpath("data"), "tip-nvim")
+  local time_file = data_path:joinpath("last_shown.txt")
+  local last_shown_time = time_file:read()
+  return last_shown_time
 end
 
 -- Only exprted for testing

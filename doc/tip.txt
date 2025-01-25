@@ -59,11 +59,19 @@ The following functions are provided by `tip.nvim`:
 2. |tip.show_tip()|                                   *tip.show_tip()*
    Displays a random tip from the configured tips in a floating window.
 
+3. |tip.last_shown()|                                *tip.last_shown()*
+   Returns the Unix timestamp of when the last tip was shown.
+
+   Return Value:
+   - `number|nil`: Unix timestamp (in seconds) of when the last tip was shown,
+     or `nil` if no tip has been shown yet or the data couldn't be read.
+
 ==============================================================================
 EXAMPLE CONFIGURATION                      *tip.nvim-example*
 
-Here is an example configuration using `lazy.nvim`. You can place the following 
-configuration in your `lazy.nvim` setup to integrate `tip.nvim`:
+Here is an example configuration using `lazy.nvim`. In this example we show a
+startup tip the first time you open Neovim each day. You can place the
+following configuration in your `lazy.nvim` setup to integrate `tip.nvim`.
 
 >lua
     {
@@ -88,10 +96,25 @@ configuration in your `lazy.nvim` setup to integrate `tip.nvim`:
           },
         }
 
-        -- Show tip on startup
+        -- Show tip on startup (alternative: define a keybinding or do something else)
         vim.api.nvim_create_autocmd('VimEnter', {
           callback = function()
-            require('tip').show_tip()
+            local last_shown = require('tip').last_shown()
+
+            -- Show startup tip if no tip was shown yet
+            if not last_shown then
+              require('tip').show_tip()
+              return
+            end
+
+            -- Show startup tip if last time a tip was shown was not today. Adjust to your needs.
+            local last_shown_date = os.date('*t', last_shown)
+            local current_date = os.date '*t'
+            if last_shown_date.year == current_date.year and last_shown_date.month == current_date.month and last_shown_date.day == current_date.day then
+              vim.notify('Do not show startup tip. Last tip was shown at ' .. os.date('%Y-%m-%d %H:%M:%S', last_shown), vim.log.levels.INFO)
+            else
+              require('tip').show_tip()
+            end
           end,
         })
       end,
